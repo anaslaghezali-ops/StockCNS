@@ -11,7 +11,7 @@ create table if not exists public.stock_docs (
 );
 
 create or replace function public.stock_docs_touch() returns trigger
-language plpgsql as $$
+language plpgsql set search_path = '' as $$
 begin
   new.updated_at := now();
   new.updated_by := auth.uid();
