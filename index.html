@@ -6,140 +6,201 @@
 <meta name="robots" content="noindex">
 <title>Stock ChickNSter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* Layout: fixed left rail of sections, one scrolling work area; tables first, forms as dense grids. */
-  --bg:#f2f3f8; --surface:#ffffff; --ink:#161a2b; --muted:#5b6280; --line:#dde0eb;
-  --accent:#3340c4; --accent-ink:#ffffff;
-  --ok:#1c7c54; --warn:#a86200; --crit:#c22f2f;
-  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
-  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  /* Layout: left rail ordered by the manager's day (do, then check), one calm work column.
+     Colour is reserved for what needs attention; a normal stock line stays neutral. */
+  --bg:#f3f4ef; --surface:#ffffff; --ink:#18201c; --muted:#626d65; --line:#dcdfd6;
+  --accent:#135f48; --accent-ink:#ffffff; --warn:#9a5a00; --crit:#bf3320;
+  --font:"Figtree","Segoe UI",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#0f1220; --surface:#181c2d; --ink:#e9ebf6; --muted:#9ba2be; --line:#2a2f47;
-    --accent:#8e99ff; --accent-ink:#0d1020; --ok:#5fd0a0; --warn:#f0b455; --crit:#ff7f7f;
+    --bg:#111613; --surface:#1a211d; --ink:#e8ece8; --muted:#98a39b; --line:#2c352f;
+    --accent:#5ecfa6; --accent-ink:#0c1410; --warn:#f0b455; --crit:#ff8370;
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#0f1220; --surface:#181c2d; --ink:#e9ebf6; --muted:#9ba2be; --line:#2a2f47;
-  --accent:#8e99ff; --accent-ink:#0d1020; --ok:#5fd0a0; --warn:#f0b455; --crit:#ff7f7f;
+  --bg:#111613; --surface:#1a211d; --ink:#e8ece8; --muted:#98a39b; --line:#2c352f;
+  --accent:#5ecfa6; --accent-ink:#0c1410; --warn:#f0b455; --crit:#ff8370;
 }
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--body);display:flex}
-h1,h2{font-family:var(--display);margin:0;text-wrap:balance}
-h1{font-size:26px;line-height:1.15}
-h2{font-size:17px}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--font);display:flex}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.2}
+h1{font-size:30px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:19px;font-weight:700}
+h3{font-size:16px;font-weight:600}
 p{margin:0}
+small{font-size:13px;font-weight:400}
 small,.muted{color:var(--muted)}
-small{font-size:12px;font-weight:400}
+a{color:var(--accent)}
 
-nav{width:212px;flex:none;background:var(--surface);border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px}
-.brand{font:700 19px var(--display);padding:4px 10px 14px}
-.brand span{color:var(--accent)}
+/* rail */
+nav{width:236px;flex:none;background:var(--surface);border-right:1px solid var(--line);padding:22px 14px 16px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.brand{font-weight:700;font-size:20px;padding:0 10px 18px;letter-spacing:-.01em}
+.grp{font-size:13px;color:var(--muted);padding:14px 10px 4px}
 nav a{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-weight:500}
 nav a:hover{background:var(--bg)}
-nav a[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
-nav .badge{background:var(--crit);color:#fff;border-radius:99px;font-size:11px;padding:1px 7px;font-weight:600}
-#sync{margin-top:auto;padding:10px;font-size:12px;color:var(--muted);overflow-wrap:anywhere}
-#login{max-width:360px}
-#login input{width:100%}
-main{flex:1;min-width:0;overflow:auto;padding:26px 28px 60px}
-#view{max-width:1180px;display:flex;flex-direction:column;gap:20px}
-.vh{display:flex;flex-direction:column;gap:4px}
-.vh p{color:var(--muted);max-width:70ch}
+nav a[aria-current="page"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.badge{background:var(--crit);color:#fff;border-radius:99px;font-size:12px;padding:0 7px;font-weight:600;line-height:20px}
+nav a[aria-current="page"] .badge{background:var(--accent-ink);color:var(--accent)}
+.foot{margin-top:auto;padding-top:16px;display:flex;flex-direction:column;gap:8px}
+#sync{padding:0 10px;font-size:13px;color:var(--muted);overflow-wrap:anywhere}
 
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
-.kpi b{font:700 24px var(--display);font-variant-numeric:tabular-nums}
-.kpi span{color:var(--muted);font-size:13px}
-.kpi.crit b{color:var(--crit)} .kpi.ok b{color:var(--ok)}
+main{flex:1;min-width:0;overflow:auto;padding:34px 40px 80px}
+#view{max-width:1060px;display:flex;flex-direction:column;gap:26px}
+.vh{display:flex;flex-direction:column;gap:6px}
+.vh p{color:var(--muted);max-width:68ch;font-size:17px}
+section{display:flex;flex-direction:column;gap:12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.panel.flush{padding:6px 0}
+.panel.hl{border-color:var(--accent);border-width:2px}
+.split{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
+.help{color:var(--muted);max-width:75ch}
 
+/* today */
+.tasks{list-style:none;margin:0;padding:0}
+.task{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:0}
+.task>div{flex:1;min-width:0;display:flex;flex-direction:column}
+.task b{font-weight:600}
+.mark{flex:none;width:26px;height:26px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;font-size:14px;font-weight:700}
+.task.done .mark{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.task.done b{font-weight:500;color:var(--muted)}
+.task.warn .mark{border-color:var(--crit);color:var(--crit)}
+.quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.choice{font:inherit;text-align:left;display:flex;flex-direction:column;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;color:var(--ink)}
+.choice:hover{border-color:var(--accent)}
+.choice b{font-weight:600}
+.choice small{color:var(--muted)}
+.choice[aria-pressed="true"]{border:2px solid var(--accent);padding:13px 15px;background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
+
+/* tables */
 .tw{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
-th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
-thead th{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.panel.flush th:first-child,.panel.flush td:first-child{padding-left:20px}
+.panel.flush th:last-child,.panel.flush td:last-child{padding-right:20px}
+tbody tr:last-child>*{border-bottom:0}
+thead th{font-size:13px;color:var(--muted);font-weight:500;white-space:nowrap}
 tbody th{font-weight:500}
 td.n,th.n{text-align:right;white-space:nowrap}
-tr.fam th{background:var(--bg);font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-td.b{font-weight:600}
-.q{display:inline-block;min-width:44px;padding:2px 8px;border-radius:6px;text-align:right}
-.q.low{background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn);font-weight:600}
-.q.out,.q.neg{background:color-mix(in srgb,var(--crit) 15%,transparent);color:var(--crit);font-weight:600}
-.pos{color:var(--ok)} .negv{color:var(--crit);font-weight:600}
-.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted)}
-.chip{display:inline-block;font-size:11px;font-weight:600;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
-.chip.ex{border-color:var(--warn);color:var(--warn)}
-.todo{color:var(--warn);font-size:12px}
+td.b{font-weight:700}
+tr.fam th{font-size:13px;color:var(--muted);font-weight:500;padding-top:16px;border-bottom:0;padding-bottom:2px}
+tr.tot>*{border-top:2px solid var(--line);font-weight:700}
+.pill{display:inline-block;font-size:13px;font-weight:600;padding:2px 10px;border-radius:99px;white-space:nowrap}
+.pill.low{background:color-mix(in srgb,var(--warn) 16%,transparent);color:var(--warn)}
+.pill.out,.pill.neg{background:color-mix(in srgb,var(--crit) 14%,transparent);color:var(--crit)}
+.pill.info{border:1px solid var(--line);color:var(--muted);font-weight:500}
+.q.low{color:var(--warn);font-weight:700}
+.q.out,.q.neg{color:var(--crit);font-weight:700}
+.pos{color:var(--accent);font-weight:600}.negv{color:var(--crit);font-weight:700}
+.todo{color:var(--warn)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.kpi{display:flex;flex-direction:column;border-left:3px solid var(--line);padding:2px 0 2px 14px}
+.kpi b{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--muted);font-size:14px}
+.kpi.crit{border-color:var(--crit)}.kpi.crit b{color:var(--crit)}
 
-.row{display:flex;flex-wrap:wrap;gap:12px;align-items:end}
-label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:500}
-input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:7px 9px;min-width:0}
-textarea{width:100%;min-height:90px;resize:vertical}
-input.qty{width:92px;text-align:right}
-td input,td select{padding:5px 7px;width:100%}
-td input.num{text-align:right;min-width:70px}
-td input.name{min-width:170px}
-:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-button{font:600 14px var(--body);border-radius:8px;padding:8px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-button:hover{border-color:var(--accent)}
-button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-button.ghost{padding:4px 9px;font-size:12px;font-weight:500;color:var(--muted)}
+/* controls */
+label{display:flex;flex-direction:column;gap:5px;font-size:14px;color:var(--muted);font-weight:500}
+label.inl{display:inline;color:inherit;font-size:inherit;font-weight:inherit}
+label.ck{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-weight:400;font-size:15px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 11px;min-width:0;min-height:42px}
+input:hover,select:hover{border-color:var(--muted)}
+input.qty{width:110px;text-align:right;font-weight:600}
+input.num{text-align:right}
+input[type=checkbox]{width:18px;height:18px;min-height:0;accent-color:var(--accent);padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button,.btn{font:600 15px var(--font);border-radius:8px;padding:9px 16px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;white-space:nowrap;display:inline-block}
+button:hover,.btn:hover{border-color:var(--accent)}
+.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.big{padding:12px 22px;font-size:16px}
+button.ghost{padding:5px 10px;font-size:14px;font-weight:500;color:var(--muted)}
 button[data-armed]{border-color:var(--crit);color:var(--crit)}
-.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
-.steps a,.vh a,.card a{color:var(--accent)}
-.split{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.recipes{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
-.rc{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
-.ck{flex-direction:row;align-items:center;gap:6px;color:var(--ink)}
-.rc .line{display:grid;grid-template-columns:1fr 80px auto;gap:6px;align-items:center}
-#toast{position:fixed;right:20px;bottom:20px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:9px;font-weight:500;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;max-width:min(420px,90vw)}
+button:disabled{opacity:.5;cursor:default}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border-radius:99px;font-weight:500;padding:7px 15px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:30px 20px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;cursor:pointer;color:var(--ink);font-size:16px;font-weight:400}
+.drop:hover,.drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.drop b{font-weight:600;font-size:17px}
+.drop input{position:absolute;opacity:0;width:1px;height:1px}
+details>summary{cursor:pointer;font-weight:600;list-style:none;display:flex;align-items:center;gap:8px}
+details>summary::before{content:"+";display:inline-grid;place-items:center;width:22px;height:22px;border:1px solid var(--line);border-radius:6px;font-weight:500}
+details[open]>summary::before{content:"–"}
+details[open]>summary{margin-bottom:14px}
+ul.plain{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+
+/* settings */
+.prod{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:18px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.prod:last-child{border-bottom:0}
+.prod fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.prod legend{font-weight:600;padding:0;margin-bottom:8px}
+.prod .two{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
+.prod input{width:100%}
+.rcp{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.rcp:last-child{border-bottom:0}
+.rcp .sum{display:flex;align-items:center;gap:12px}
+.rcp .sum>div{flex:1;min-width:0;display:flex;flex-direction:column}
+.rcp .line{display:grid;grid-template-columns:minmax(0,320px) 100px auto;gap:8px;align-items:center}
+.rcp .ed{display:flex;flex-direction:column;gap:12px;padding:4px 0 8px}
+#login{max-width:380px}
+#login input{width:100%}
+#toast{position:fixed;right:24px;bottom:24px;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:10px;font-weight:500;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none;max-width:min(440px,90vw)}
 #toast.on{opacity:1;transform:none}
 #toast.err{background:var(--crit);color:#fff}
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
-@media (max-width:820px){
+@media (max-width:900px){
   body{flex-direction:column}
   nav{width:auto;flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 12px;align-items:center}
-  .brand{padding:0 10px 0 4px} #sync{display:none} nav a{white-space:nowrap}
-  main{padding:18px 16px 50px}
+  .brand{padding:0 10px 0 4px}.grp,#sync{display:none}.foot{margin:0 0 0 auto;padding:0}nav a{white-space:nowrap}
+  main{padding:22px 16px 60px}h1{font-size:25px}
+  .prod{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 <nav aria-label="Sections">
-  <div class="brand">Stock <span>CNS</span></div>
-  <a href="#stock" data-v="stock">Stock</a>
-  <a href="#mouvements" data-v="mouvements">Mouvements</a>
+  <div class="brand">Stock ChickNSter</div>
+  <a href="#accueil" data-v="accueil">Aujourd'hui <span class="badge" id="nt" hidden></span></a>
+  <div class="grp">Saisir</div>
   <a href="#ventes" data-v="ventes">Ventes</a>
-  <a href="#inventaire" data-v="inventaire">Inventaire et écarts</a>
-  <a href="#commandes" data-v="commandes">Commandes <span class="badge" id="nb" hidden></span></a>
-  <a href="#reglages" data-v="reglages">Réglages</a>
-  <div id="sync">Chargement…</div>
-  <button class="ghost" id="logout" hidden>Se déconnecter</button>
+  <a href="#mouvements" data-v="mouvements">Entrées et sorties</a>
+  <a href="#inventaire" data-v="inventaire">Inventaire</a>
+  <div class="grp">Consulter</div>
+  <a href="#stock" data-v="stock">Stock</a>
+  <a href="#commandes" data-v="commandes">À commander <span class="badge" id="nb" hidden></span></a>
+  <div class="foot">
+    <a href="#reglages" data-v="reglages">Réglages</a>
+    <div id="sync">Chargement…</div>
+    <button class="ghost" id="logout" hidden>Se déconnecter</button>
+  </div>
 </nav>
-<main><div id="view"><div class="card">Chargement des données…</div></div></main>
+<main><div id="view"><div class="panel">Chargement des données…</div></div></main>
 <div id="toast" role="status"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 "use strict";
-/* Connexion à la base : URL du projet Supabase et clé publique (anon). */
+/* Connexion à la base : URL du projet Supabase et clé publique. */
 const SUPABASE_URL="https://ubroliirvztmjfojdfvy.supabase.co";
 const SUPABASE_KEY="sb_publishable_VCGMqjBFlKLQ7tffXY50GA_LpsPnt-3";
+
 const FAMILIES=['Boissons','Pain','Poulet','Sachets','Boîtes burger'];
-const TYPES={reception:'Réception fournisseur',transfert:'Transfert',perte:'Perte / casse'};
-const VIEWS=['stock','mouvements','ventes','inventaire','commandes','reglages'];
+const TYPES={reception:['Réception fournisseur','Une livraison arrive au dépôt ou dans un restaurant.'],transfert:['Transfert','Du stock part du dépôt vers un restaurant.'],perte:['Perte ou casse','Du stock est jeté, abîmé ou offert.']};
+const VIEWS=['accueil','ventes','mouvements','inventaire','stock','commandes','reglages'];
 const S={sites:[],products:[],menu:[],moves:[],sales:[],counts:[],cfg:{}};
 const ready={};
-let db=null, EV={}, CNT={};
+let db=null,EV={},CNT={};
 const today=()=>new Date().toLocaleDateString('en-CA');
-const ui={move:{type:'reception',date:today(),site:'',to:''},sale:{date:today(),site:''},count:{date:today(),site:'',sel:''},imp:null};
+const ui={move:{type:'reception',date:today(),site:'',to:''},sale:{date:today(),site:'',open:false},count:{date:today(),site:'',sel:''},imp:null,stock:{site:''},set:{tab:'produits',edit:'',filter:'stock',q:''}};
 const view=document.getElementById('view');
 
 /* ---------- helpers ---------- */
@@ -150,22 +211,23 @@ const money=n=>new Intl.NumberFormat('fr-FR',{minimumFractionDigits:2,maximumFra
 const num=v=>{v=String(v??'').trim().replace(/\s/g,'').replace(',','.');if(v==='')return null;const x=parseFloat(v);return isFinite(x)?x:null};
 const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim();
 const dfr=d=>{const [y,m,j]=String(d).split('-');return j+'/'+m+'/'+y};
+const dobj=d=>{const [y,m,j]=String(d).split('-');return new Date(+y,m-1,+j)};
+const dlong=d=>dobj(d).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+const dayDiff=(a,b)=>Math.round((dobj(b)-dobj(a))/864e5);
 const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.toLocaleDateString('en-CA')};
 const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const byId=(arr,id)=>arr.find(x=>x.id===id);
+const pl=(n,one,many)=>n+' '+(n>1?many:one);
 const famIdx=x=>{const i=FAMILIES.indexOf(x);return i<0?99:i};
 const prods=()=>[...S.products].sort((a,b)=>famIdx(a.family)-famIdx(b.family)||String(a.family).localeCompare(b.family)||String(a.name).localeCompare(b.name,'fr'));
 const depots=()=>S.sites.filter(s=>s.type==='depot');
 const restos=()=>S.sites.filter(s=>s.type!=='depot');
 const sitesSorted=()=>[...depots(),...restos()];
 const opts=(list,sel)=>list.map(x=>`<option value="${esc(x.id)}"${x.id===sel?' selected':''}>${esc(x.name)}</option>`).join('');
+const pname=p=>`${esc(p.name)} <small>${esc(p.unit||'')}</small>`;
 let tt;
-function toast(msg,err){const t=document.getElementById('toast');t.textContent=msg;t.className='on'+(err?' err':'');clearTimeout(tt);tt=setTimeout(()=>t.className='',err?5000:2200)}
-function errMsg(e){const c=e&&e.code;
-  if(c==='invalid_argument')return "Enregistrement refusé. Vérifiez que vous avez le droit de modifier cette page.";
-  if(c==='quota_exceeded')return "La base est pleine. Supprimez d'anciens mouvements.";
-  if(c==='revoked'||c==='not_granted')return "Accès aux données retiré. Rechargez la page.";
-  return "Enregistrement impossible"+(e&&e.message?" : "+e.message:". Réessayez.")}
+function toast(msg,err){const t=document.getElementById('toast');t.textContent=msg;t.className='on'+(err?' err':'');clearTimeout(tt);tt=setTimeout(()=>t.className='',err?5000:2400)}
+function errMsg(e){return "Enregistrement impossible"+(e&&e.message?" : "+e.message:". Réessayez.")}
 async function w(fn,ok){if(!db){toast("Connectez-vous pour enregistrer.",true);return false}
   try{await fn();if(ok)toast(ok);return true}catch(e){toast(errMsg(e),true);return false}}
 
@@ -181,7 +243,7 @@ function rebuild(){
   for(const c of S.counts)(CNT[c.siteId]=CNT[c.siteId]||[]).push(c);
   for(const k in CNT)CNT[k].sort((a,b)=>a.date<b.date?-1:1);
 }
-/* Inventaire = comptage de fin de journée : il remplace le stock théorique à cette date. */
+/* Inventaire = comptage de fin de journée : il remplace le stock calculé à cette date. */
 function stockAt(siteId,pid,asOf='9999-99-99',strict=false){
   let base=0,from='';const cs=CNT[siteId]||[];
   for(let i=cs.length-1;i>=0;i--){const c=cs[i];
@@ -191,8 +253,11 @@ function stockAt(siteId,pid,asOf='9999-99-99',strict=false){
 }
 function use7(siteId,pid){const from=daysAgo(7);let t=0;
   for(const s of S.sales)if(s.date>from&&(!siteId||s.siteId===siteId))t+=+(s.usage||{})[pid]||0;return t}
-function status(site,p,q){const min=site.type==='depot'?p.minD:p.minR;
+const minOf=(site,p)=>site.type==='depot'?p.minD:p.minR;
+function status(site,p,q){const min=minOf(site,p);
   if(q<0)return 'neg';if(min>0&&q<=0)return 'out';if(min>0&&q<min)return 'low';return 'ok'}
+const PILL={neg:'Négatif',out:'Rupture',low:'Bas'};
+const pill=(st,hasMin)=>st==='ok'?(hasMin?'<span class="muted">OK</span>':'<span class="muted" title="Aucun seuil défini pour ce produit">–</span>'):`<span class="pill ${st}">${PILL[st]}</span>`;
 function costOf(lines){let t=0;for(const [pid,q] of Object.entries(lines||{})){const p=byId(S.products,pid);if(p&&p.cost!=null)t+=(+q||0)*p.cost}return t}
 function gaps(c){
   const initial=(CNT[c.siteId]||[])[0]===c;const rows=[];let total=0;
@@ -225,14 +290,13 @@ function toIso(v){const p=(y,m,d)=>y+'-'+String(m).padStart(2,'0')+'-'+String(d)
   return null}
 /* Règle de nommage : « Menu … » = burger + frites + boisson ; « … Stripster » = 1 pièce, « Menu … Stripster » = 2 pièces. */
 function guess(name){const n=norm(name),c=S.cfg||{},comp=(id,q)=>id&&byId(S.products,id)?[{pid:id,qty:q}]:[];
-  const menu=/^menu\b/.test(n);
-  const dr=menu?comp(c.drink,1):[];
+  const menu=/^menu\b/.test(n);const dr=menu?comp(c.drink,1):[];
   if(/strip/.test(n))return {components:[...comp(c.chicken,menu?2:1),...dr],bag:true,drink:menu};
   if(menu)return {components:[...comp(c.chicken,1),...comp(c.bun,1),...comp(c.box,1),...dr],bag:true,drink:true};
   return null}
 function parseExport(rows){
   const hi=rows.findIndex(r=>r&&r.some(c=>String(c??'').trim()==='Ticket No.'));
-  if(hi<0)throw new Error("Colonne « Ticket No. » introuvable : ce fichier n'est pas un export de tickets.");
+  if(hi<0)throw new Error("Ce fichier n'est pas l'export des tickets : la colonne « Ticket No. » est introuvable.");
   const H=rows[hi].map(c=>String(c??'').trim()),col=n=>H.indexOf(n);
   const cN=col('Ticket No.'),cD=col('Date'),cT=col('Ticket name'),cA=col('Designations (Reference)'),cR=col('Refund'),cL=col('Location');
   if(cD<0||cT<0||cA<0)throw new Error("Colonnes « Date », « Ticket name » ou « Designations (Reference) » manquantes.");
@@ -253,193 +317,247 @@ function parseExport(rows){
 function dayUsage(d){
   const byName={};S.menu.forEach(it=>byName[norm(it.name)]=it);const usage={},unknown=[];let drinks=0;
   for(const [k,x] of Object.entries(d.names)){const it=byName[k],g=it||guess(x.name);
-    if(!it)unknown.push({name:x.name,g});if(!g)continue;if(g.drink&&!(g.components||[]).some(c=>c.pid===(S.cfg||{}).drink&&c.qty))drinks+=x.q;
+    if(!it)unknown.push({name:x.name,g});if(!g)continue;
+    if(g.drink&&!(g.components||[]).some(c=>c.pid===(S.cfg||{}).drink&&c.qty))drinks+=x.q;
     for(const c of g.components||[])if(c.pid&&c.qty)usage[c.pid]=r3((usage[c.pid]||0)+x.q*c.qty)}
   const bag=(S.cfg||{}).bag,extra={};
   if(d.bags&&bag&&byId(S.products,bag)){extra[bag]=d.bags;usage[bag]=r3((usage[bag]||0)+d.bags)}
   return {usage,extra,drinks,unknown};
 }
 /* ---------- end import ---------- */
+
+/* ---------- views ---------- */
+const head=(t,s)=>`<header class="vh"><h1>${t}</h1>${s?`<p>${s}</p>`:''}</header>`;
+const noData=()=>`<div class="panel"><h2>Aucun produit pour l'instant</h2><p class="help">Ajoutez d'abord vos produits dans les réglages.</p><div><a class="btn primary" href="#reglages">Ouvrir les réglages</a></div></div>`;
+function famRows(ps,cols,rowFn){let fam=null,h='';const grouped=new Set(ps.map(p=>p.family)).size<ps.length;for(const p of ps){if(grouped&&p.family!==fam){fam=p.family;h+=`<tr class="fam"><th colspan="${cols}">${esc(fam||'Autres')}</th></tr>`}h+=rowFn(p)}return h}
+const seg=(items,cur,act)=>`<div class="seg">${items.map(([id,l])=>`<button data-act="${act}" data-id="${esc(id)}" aria-pressed="${id===cur}">${l}</button>`).join('')}</div>`;
+const diffHtml=d=>d===0?'0':`<span class="${d<0?'negv':'pos'}">${d>0?'+':''}${f(d)}</span>`;
+
+function tasks(){
+  const t=[],y=daysAgo(1),ps=prods();
+  if(!ps.length)return [{s:'todo',t:'Ajouter vos produits',d:'La liste des produits suivis est vide.',a:['reglages','Ouvrir les réglages']}];
+  const noCost=ps.filter(p=>p.cost==null).length,noMin=ps.filter(p=>!(p.minR>0)&&!(p.minD>0)).length;
+  if(noCost||noMin)t.push({s:'todo',t:'Compléter les réglages des produits',d:[noCost?pl(noCost,"produit sans coût d'achat","produits sans coût d'achat"):'',noMin?pl(noMin,"sans seuil d'alerte","sans seuil d'alerte"):''].filter(Boolean).join(', ')+'. La valeur du stock et les alertes en dépendent.',a:['reglages','Ouvrir les réglages']});
+  for(const s of sitesSorted())if(!(CNT[s.id]||[]).length)t.push({s:'todo',t:`Compter le stock de départ : ${s.name}`,d:'Sans ce premier inventaire, le stock affiché part de zéro.',a:['inventaire',"Faire l'inventaire"],count:s.id});
+  for(const s of restos()){const d=byId(S.sales,y+'_'+s.id);
+    t.push(d?{s:'done',t:`Ventes d'hier enregistrées : ${s.name}`,d:dlong(y)+(d.tickets?', '+d.tickets+' tickets':'')}:{s:'todo',t:`Importer les ventes d'hier : ${s.name}`,d:dlong(y),a:['ventes','Importer les ventes'],sale:s.id})}
+  let neg=0;for(const s of S.sites)for(const p of ps)if(stockAt(s.id,p.id)<0)neg++;
+  if(neg)t.push({s:'warn',t:pl(neg,'stock négatif','stocks négatifs'),d:"Une réception, un transfert ou un inventaire n'a pas été saisi.",a:['stock','Voir le stock']});
+  const n=needs();
+  if(n.sup.length)t.push({s:'warn',t:pl(n.sup.length,'produit à commander pour le dépôt','produits à commander pour le dépôt'),d:n.sup.map(x=>x.p.name).join(', '),a:['commandes','Voir la commande']});
+  if(n.tr.length)t.push({s:'warn',t:pl(n.tr.length,'réassort à envoyer en restaurant','réassorts à envoyer en restaurant'),d:n.tr.map(x=>x.p.name+' ('+x.s.name+')').join(', '),a:['commandes','Voir les transferts']});
+  for(const s of sitesSorted()){const cs=CNT[s.id]||[];if(!cs.length)continue;const last=cs[cs.length-1].date,n=dayDiff(last,today());
+    t.push(n>7?{s:'todo',t:`Refaire l'inventaire : ${s.name}`,d:`Dernier comptage il y a ${n} jours. Un comptage par semaine garde le stock fiable.`,a:['inventaire',"Faire l'inventaire"],count:s.id}
+      :{s:'done',t:`Inventaire à jour : ${s.name}`,d:n<=0?"Compté aujourd'hui":n===1?'Compté hier':`Compté il y a ${n} jours`})}
+  const o={todo:0,warn:1,done:2};return t.sort((a,b)=>o[a.s]-o[b.s]);
+}
+function vHome(){
+  const ts=tasks(),open=ts.filter(x=>x.s!=='done').length;
+  const li=ts.map(x=>`<li class="task ${x.s}"><span class="mark" aria-hidden="true">${x.s==='done'?'✓':x.s==='warn'?'!':''}</span><div><b>${esc(x.t)}</b>${x.d?`<small>${esc(x.d)}</small>`:''}</div>${x.a?`<button class="${x.s==='todo'?'primary':''}" data-act="go" data-to="${x.a[0]}"${x.count?` data-count="${esc(x.count)}"`:''}${x.sale?` data-sale="${esc(x.sale)}"`:''}>${x.a[1]}</button>`:''}</li>`).join('');
+  const dl=dlong(today());
+  return head(dl.charAt(0).toUpperCase()+dl.slice(1),open?`${pl(open,'chose','choses')} à faire pour garder le stock à jour.`:'Tout est à jour.')+
+  `<section><div class="panel flush"><ul class="tasks">${li}</ul></div></section>
+  <section><h2>Saisir un mouvement</h2><div class="quick">${Object.entries(TYPES).map(([k,[l,d]])=>`<button class="choice" data-act="go" data-to="mouvements" data-type="${k}"><b>${l}</b><small>${d}</small></button>`).join('')}</div></section>`;
+}
+
+function vStock(){
+  const ps=prods(),sites=sitesSorted();if(!ps.length)return head('Stock','')+noData();
+  const sel=byId(sites,ui.stock.site),list=sel?[sel]:sites;
+  let val=0,alerts=0;const ids=list.map(s=>s.id);
+  for(const p of ps)for(const s of list){const q=stockAt(s.id,p.id);if(status(s,p,q)!=='ok')alerts++;if(p.cost!=null)val+=Math.max(q,0)*p.cost}
+  const from30=daysAgo(30);let gap=0,ng=0;
+  for(const c of S.counts)if(c.date>from30&&ids.includes(c.siteId)){const g=gaps(c);if(!g.initial){gap+=g.total;ng++}}
+  let cm=0;const from7=daysAgo(7);for(const s of S.sales)if(s.date>from7&&ids.includes(s.siteId))cm+=costOf(s.usage);
+  let table;
+  if(sel){
+    table=`<thead><tr><th>Produit</th><th class="n">En stock</th><th class="n">Seuil d'alerte</th><th>État</th><th class="n">Tient encore</th><th class="n">Valeur</th></tr></thead><tbody>${famRows(ps,6,p=>{
+      const q=stockAt(sel.id,p.id),st=status(sel,p,q),min=minOf(sel,p),u=use7(sel.type==='depot'?null:sel.id,p.id)/7;
+      return `<tr><th>${pname(p)}</th><td class="n b"><span class="q ${st}">${f(q)}</span></td><td class="n muted">${min>0?f(min):'–'}</td><td>${pill(st,min>0)}</td><td class="n">${u>0&&q>0?f(q/u,1)+' j':'–'}</td><td class="n">${p.cost!=null?money(Math.max(q,0)*p.cost):'<span class="todo">coût à saisir</span>'}</td></tr>`})}</tbody>`;
+  }else{
+    table=`<thead><tr><th>Produit</th>${sites.map(s=>`<th class="n">${esc(s.name)}</th>`).join('')}<th class="n">Total</th><th class="n">Tient encore</th><th class="n">Valeur</th></tr></thead><tbody>${famRows(ps,sites.length+4,p=>{let tot=0;
+      const cells=sites.map(s=>{const q=stockAt(s.id,p.id);tot+=q;const st=status(s,p,q);return `<td class="n"><span class="q ${st}">${f(q)}</span>${st!=='ok'?` <span class="pill ${st}">${PILL[st]}</span>`:''}</td>`}).join('');
+      const u=use7(null,p.id)/7;
+      return `<tr><th>${pname(p)}</th>${cells}<td class="n b">${f(tot)}</td><td class="n">${u>0&&tot>0?f(tot/u,1)+' j':'–'}</td><td class="n">${p.cost!=null?money(Math.max(tot,0)*p.cost):'<span class="todo">coût à saisir</span>'}</td></tr>`})}</tbody>`;
+  }
+  return head('Stock',`Quantités calculées au ${dfr(today())} : dernier inventaire, plus les entrées, moins les ventes et les pertes.`)+
+  seg([['','Tous les sites'],...sites.map(s=>[s.id,esc(s.name)])],sel?sel.id:'','stockSite')+
+  `<div class="kpis">
+    <div class="kpi"><b>${money(val)}</b><span>Valeur du stock</span></div>
+    <div class="kpi ${alerts?'crit':''}"><b>${alerts}</b><span>${alerts>1?'Produits':'Produit'} en alerte</span></div>
+    <div class="kpi ${gap<0?'crit':''}"><b>${ng?money(gap):'–'}</b><span>Écarts d'inventaire, 30 derniers jours</span></div>
+    <div class="kpi"><b>${money(cm)}</b><span>Coût des produits vendus, 7 derniers jours</span></div>
+  </div>
+  <div class="panel flush"><div class="tw"><table>${table}</table></div></div>
+  <p class="help">« Tient encore » : nombre de jours de stock au rythme des ventes des 7 derniers jours.</p>`;
+}
+
 function impHtml(){
   const imp=ui.imp;if(!imp)return '';
   const days=Object.values(imp.days).sort((a,b)=>a.date<b.date?-1:1);const tot={},unk={};let drinks=0;
   const lines=days.map(d=>{const u=dayUsage(d);drinks+=u.drinks;for(const [p,q] of Object.entries(u.usage))tot[p]=r3((tot[p]||0)+q);u.unknown.forEach(x=>unk[x.name]=x.g);
-    return `<li>${dfr(d.date)} : ${d.tickets} tickets, dont ${d.deliv} en livraison (${d.bags} sachets)</li>`}).join('');
-  const rows=prods().filter(p=>tot[p.id]).map(p=>`<tr><th>${esc(p.name)} <small>${esc(p.unit||'')}</small></th><td class="n b">${f(tot[p.id])}</td></tr>`).join('');
-  const un=Object.entries(unk);
-  return `<div class="card" style="border-color:var(--accent)"><h2>Aperçu de l'import</h2><ul class="steps">${lines}</ul>
-  ${rows?`<div class="tw"><table><thead><tr><th>Produit</th><th class="n">Consommation calculée</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<p class="todo">Aucune consommation calculée. Vérifiez les recettes et les produits de l\'import dans Réglages.</p>'}
-  ${drinks?`<p class="todo">${drinks} boisson${drinks>1?'s':''} de menu non déduite${drinks>1?'s':''} : ajoutez la boisson à la recette de ces menus dans Réglages.</p>`:''}
-  ${un.length?`<p class="muted">Nouveaux articles ajoutés aux recettes à l'enregistrement : ${un.map(([n,g])=>esc(n)+(g?' (recette déduite du nom)':' <span class="todo">(à classer, ne déduit rien)</span>')).join(' · ')}</p>`:''}
-  ${imp.skipped?`<p class="muted">${imp.skipped} ticket${imp.skipped>1?'s':''} ignoré${imp.skipped>1?'s':''} (remboursé ou sans date lisible).</p>`:''}
-  ${imp.locs.length>1?`<p class="todo">Le fichier contient plusieurs points de vente (${imp.locs.map(esc).join(', ')}). Tout sera affecté au restaurant choisi ci-dessus : importez un fichier par restaurant.</p>`:''}
-  <p class="muted">L'enregistrement remplace la saisie existante de ces journées pour le restaurant choisi.</p>
-  <div class="row"><button class="primary" data-act="saveImport">Enregistrer ${days.length} journée${days.length>1?'s':''}</button><button data-act="cancelImport">Annuler</button></div></div>`;
+    return `<li>${dlong(d.date)} : ${d.tickets} tickets, dont ${d.deliv} en livraison</li>`}).join('');
+  const rows=prods().filter(p=>tot[p.id]).map(p=>`<tr><th>${pname(p)}</th><td class="n b">${f(tot[p.id])}</td></tr>`).join('');
+  const un=Object.entries(unk),bad=un.filter(([,g])=>!g);
+  return `<div class="panel hl"><h2>Vérifiez avant d'enregistrer</h2><ul class="plain">${lines}</ul>
+  ${rows?`<div class="tw"><table><thead><tr><th>Produit</th><th class="n">Sera retiré du stock</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<p class="todo">Rien ne sera retiré du stock. Vérifiez les recettes dans les réglages.</p>'}
+  ${drinks?`<p class="todo">${pl(drinks,'boisson de menu non retirée','boissons de menu non retirées')} : ajoutez la boisson à la recette de ces menus dans les réglages.</p>`:''}
+  ${bad.length?`<p class="todo">${pl(bad.length,'article inconnu','articles inconnus')}, qui ne retire${bad.length>1?'nt':''} rien du stock : ${bad.map(([n])=>esc(n)).join(', ')}. Vous pourrez ${bad.length>1?'les':'le'} classer dans Réglages, Recettes.</p>`:''}
+  ${un.length>bad.length?`<p class="help">Nouveaux articles reconnus d'après leur nom : ${un.filter(([,g])=>g).map(([n])=>esc(n)).join(', ')}.</p>`:''}
+  ${imp.skipped?`<p class="help">${pl(imp.skipped,'ticket ignoré','tickets ignorés')} (remboursé ou sans date lisible).</p>`:''}
+  ${imp.locs.length>1?`<p class="todo">Ce fichier contient plusieurs points de vente (${imp.locs.map(esc).join(', ')}). Importez un fichier par restaurant.</p>`:''}
+  <div class="row"><button class="primary big" data-act="saveImport">Enregistrer ${pl(days.length,'journée','journées')}</button><button data-act="cancelImport">Annuler</button></div>
+  <p class="help">Si ces journées étaient déjà enregistrées pour ce restaurant, elles sont remplacées.</p></div>`;
 }
-
-/* ---------- views ---------- */
-const head=(t,s)=>`<header class="vh"><h1>${t}</h1><p>${s}</p></header>`;
-const noData=()=>`<div class="card"><h2>Aucun produit pour l'instant</h2><p class="muted">Ajoutez vos sites, vos produits et vos recettes dans <a href="#reglages">Réglages</a>, puis saisissez votre stock initial.</p></div>`;
-function famRows(ps,cols,rowFn){let fam=null,h='';for(const p of ps){if(p.family!==fam){fam=p.family;h+=`<tr class="fam"><th colspan="${cols}">${esc(fam||'Autres')}</th></tr>`}h+=rowFn(p)}return h}
-
-function vStock(){
-  const ps=prods(),sites=sitesSorted();if(!ps.length)return head('Stock','')+noData();
-  let val=0,noCost=0,alerts=0;
-  const body=famRows(ps,sites.length+4,p=>{
-    if(p.cost==null)noCost++;let tot=0;
-    const cells=sites.map(s=>{const q=stockAt(s.id,p.id);tot+=q;const st=status(s,p,q);if(st!=='ok')alerts++;return `<td class="n"><span class="q ${st}">${f(q)}</span></td>`}).join('');
-    const v=p.cost!=null?Math.max(tot,0)*p.cost:null;if(v)val+=v;
-    const u=use7(null,p.id)/7;
-    return `<tr><th>${esc(p.name)} <small>${esc(p.unit||'')}</small></th>${cells}<td class="n b">${f(tot)}</td><td class="n">${v!=null?money(v):'<span class="todo">coût à saisir</span>'}</td><td class="n">${u>0?f(tot/u,1)+' j':'–'}</td></tr>`});
-  const from30=daysAgo(30);let gap=0,ng=0;
-  for(const c of S.counts)if(c.date>from30){const g=gaps(c);if(!g.initial){gap+=g.total;ng++}}
-  let cm=0;const from7=daysAgo(7);for(const s of S.sales)if(s.date>from7)cm+=costOf(s.usage);
-  const start=!S.moves.length&&!S.counts.length?`<div class="card"><h2>Pour démarrer</h2><ol class="steps">
-    <li>Dans <a href="#reglages">Réglages</a>, corrigez la liste des sites et des produits, puis saisissez les coûts d'achat, les seuils et vos recettes.</li>
-    <li>Dans <a href="#inventaire">Inventaire et écarts</a>, comptez chaque site une première fois : c'est votre stock initial.</li>
-    <li>Chaque jour, saisissez les <a href="#mouvements">réceptions et transferts</a> et les <a href="#ventes">ventes</a>. Le stock se déduit tout seul selon les recettes.</li></ol></div>`:'';
-  return head('Stock',`Stock théorique au ${dfr(today())}, par site. Il part du dernier inventaire, ajoute les réceptions et transferts, retire les ventes et les pertes.`)+start+
-  `<div class="kpis">
-    <div class="kpi"><b>${money(val)}</b><span>Valeur du stock${noCost?` · ${noCost} produit${noCost>1?'s':''} sans coût`:''}</span></div>
-    <div class="kpi ${alerts?'crit':'ok'}"><b>${alerts}</b><span>Alerte${alerts>1?'s':''} : rupture ou sous le seuil</span></div>
-    <div class="kpi ${gap<0?'crit':''}"><b>${ng?money(gap):'–'}</b><span>Écarts d'inventaire sur 30 jours${ng?'':' · aucun inventaire comparé'}</span></div>
-    <div class="kpi"><b>${money(cm)}</b><span>Coût matière des ventes sur 7 jours</span></div>
-  </div>
-  <div class="card"><div class="tw"><table><thead><tr><th>Produit</th>${sites.map(s=>`<th class="n">${esc(s.name)}</th>`).join('')}<th class="n">Total</th><th class="n">Valeur</th><th class="n">Couverture</th></tr></thead><tbody>${body}</tbody></table></div>
-  <div class="legend"><span><span class="q out">0</span> Rupture ou stock négatif</span><span><span class="q low">12</span> Sous le seuil</span><span>Couverture : jours de stock restants au rythme des ventes des 7 derniers jours</span></div></div>`;
-}
-
-function vMoves(){
-  const ps=prods();if(!ps.length)return head('Mouvements','')+noData();
-  const m=ui.move,all=sitesSorted();
-  const site=byId(all,m.site)||(m.type==='perte'?all[0]:depots()[0]||all[0]);
-  const dest=byId(all,m.to)||restos()[0]||all.find(s=>s!==site);
-  const tr=m.type==='transfert';
-  const body=famRows(ps,tr?3:2,p=>`<tr><th><label for="mq-${esc(p.id)}" style="color:inherit;font-size:inherit">${esc(p.name)} <small>${esc(p.unit||'')}</small></label></th>${tr?`<td class="n muted">${site?f(stockAt(site.id,p.id)):'–'}</td>`:''}<td class="n"><input class="qty" inputmode="decimal" id="mq-${esc(p.id)}" data-mq="${esc(p.id)}" autocomplete="off"></td></tr>`);
-  const hist=S.moves.slice(0,40).map(x=>{const s=byId(S.sites,x.siteId),t=byId(S.sites,x.toSiteId);
-    const res=Object.entries(x.lines||{}).map(([pid,q])=>esc((byId(S.products,pid)||{name:'Produit supprimé'}).name)+' × '+f(q)).join(', ');
-    return `<tr><td>${dfr(x.date)}</td><td><span class="chip">${esc(TYPES[x.type]||x.type)}</span></td><td>${esc(s?s.name:'?')}${x.type==='transfert'?' → '+esc(t?t.name:'?'):''}</td><td>${res}${x.note?` <small>· ${esc(x.note)}</small>`:''}</td><td class="n">${money(costOf(x.lines))}</td><td class="n"><button class="ghost" data-act="del" data-path="movements/${esc(x.id)}">Supprimer</button></td></tr>`}).join('');
-  return head('Mouvements','Saisissez ici ce qui entre et sort hors ventes : livraisons fournisseurs, transferts du dépôt vers un restaurant, pertes et casse.')+
-  `<div class="card"><div class="row">
-    <label for="mv-type">Type<select id="mv-type" data-ui="move.type">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}"${k===m.type?' selected':''}>${v}</option>`).join('')}</select></label>
-    <label for="mv-date">Date<input type="date" id="mv-date" data-ui="move.date" value="${esc(m.date)}"></label>
-    <label for="mv-site">${tr?'Depuis':'Site'}<select id="mv-site" data-ui="move.site">${opts(all,site&&site.id)}</select></label>
-    ${tr?`<label for="mv-to">Vers<select id="mv-to" data-ui="move.to">${opts(all,dest&&dest.id)}</select></label>`:''}
-    <label for="mv-note" style="flex:1;min-width:160px">Note (n° de bon, fournisseur…)<input id="mv-note" autocomplete="off"></label>
-  </div>
-  <div class="tw"><table><thead><tr><th>Produit</th>${tr?'<th class="n">Disponible</th>':''}<th class="n">Quantité</th></tr></thead><tbody>${body}</tbody></table></div>
-  <div><button class="primary" data-act="saveMove">Enregistrer le mouvement</button></div></div>
-  <div class="card"><h2>Derniers mouvements</h2>${hist?`<div class="tw"><table><thead><tr><th>Date</th><th>Type</th><th>Site</th><th>Détail</th><th class="n">Valeur</th><th></th></tr></thead><tbody>${hist}</tbody></table></div>`:'<p class="muted">Aucun mouvement enregistré.</p>'}</div>`;
-}
-
 function vSales(){
-  if(!S.menu.length)return head('Ventes','')+`<div class="card"><h2>Aucune recette</h2><p class="muted">Créez vos articles de vente et leur composition dans <a href="#reglages">Réglages</a>. Sans recette, les ventes ne peuvent pas déduire le stock.</p></div>`;
   const u=ui.sale,rs=restos().length?restos():S.sites,site=byId(rs,u.site)||rs[0];
   const cur=site?byId(S.sales,u.date+'_'+site.id):null;
   const items=S.menu.filter(it=>!it.skip).sort((a,b)=>String(a.name).localeCompare(b.name,'fr'));
-  const body=items.map(it=>{const comp=(it.components||[]).map(c=>esc((byId(S.products,c.pid)||{name:'?'}).name)+' × '+f(c.qty,3)).join(', ');
-    const v=cur&&cur.items&&cur.items[it.id];
-    return `<tr><th><label for="sq-${esc(it.id)}" style="color:inherit;font-size:inherit">${esc(it.name)}</label> ${it.example?'<span class="chip ex">Exemple à adapter</span>':''}</th><td class="muted">${comp||'<span class="todo">recette vide</span>'}</td><td class="n"><input class="qty" inputmode="decimal" id="sq-${esc(it.id)}" data-sq="${esc(it.id)}" value="${v?esc(v):''}" autocomplete="off"></td></tr>`}).join('');
-  const hist=S.sales.slice(0,30).map(x=>{const s=byId(S.sites,x.siteId);const n=Object.values(x.items||{}).reduce((a,b)=>a+(+b||0),0);
-    return `<tr><td>${dfr(x.date)}</td><td>${esc(s?s.name:'?')}</td><td class="n">${f(n)}</td><td class="n">${x.deliv!=null?f(x.deliv):'–'}</td><td class="n">${x.menuDrinks?f(x.menuDrinks):'–'}</td><td class="n">${money(costOf(x.usage))}</td><td class="n"><button class="ghost" data-act="del" data-path="sales/${esc(x.id)}">Supprimer</button></td></tr>`}).join('');
-  return head('Ventes',"Importez l'export de caisse du jour ou saisissez les quantités à la main. Chaque article retire du stock les produits de sa recette.")+
-  `<div class="card"><div class="row">
-    <label for="sl-date">Date<input type="date" id="sl-date" data-ui="sale.date" value="${esc(u.date)}"></label>
-    <label for="sl-site">Restaurant<select id="sl-site" data-ui="sale.site">${opts(rs,site&&site.id)}</select></label>
-    <span class="chip">${cur?'Journée déjà saisie : vous la modifiez':'Nouvelle journée'}</span>
+  const body=items.map(it=>{const v=cur&&cur.items&&cur.items[it.id];
+    return `<tr><th><label for="sq-${esc(it.id)}" class="inl">${esc(it.name)}</label></th><td class="n"><input class="qty" inputmode="decimal" id="sq-${esc(it.id)}" data-sq="${esc(it.id)}" value="${v?esc(v):''}" autocomplete="off"></td></tr>`}).join('');
+  const hist=S.sales.slice(0,30).map(x=>{const s=byId(S.sites,x.siteId);
+    return `<tr><td>${dlong(x.date)}</td><td>${esc(s?s.name:'?')}</td><td class="n">${x.tickets!=null?f(x.tickets):'–'}</td><td class="n">${x.deliv!=null?f(x.deliv):'–'}</td><td class="n">${money(costOf(x.usage))}</td><td class="n"><button class="ghost" data-act="del" data-path="sales/${esc(x.id)}">Supprimer</button></td></tr>`}).join('');
+  return head('Ventes',"Chaque jour, importez l'export des tickets de la caisse. Le stock est mis à jour d'après les recettes.")+
+  `<section><div class="panel">
+    ${rs.length>1?`<label for="sl-site" style="max-width:320px">Restaurant concerné<select id="sl-site" data-ui="sale.site">${opts(rs,site&&site.id)}</select></label>`:`<input type="hidden" id="sl-site" value="${esc(site?site.id:'')}">`}
+    <label class="drop" id="drop" for="sl-file"><b>Choisir l'export Excel de la caisse</b><span class="muted">ou déposez le fichier ici. Historique des tickets, au format .xlsx</span><input type="file" id="sl-file" accept=".xlsx,.xls,.csv"></label>
+  </div>${impHtml()}</section>
+  <section><h2>Journées enregistrées</h2>${hist?`<div class="panel flush"><div class="tw"><table><thead><tr><th>Jour</th><th>Restaurant</th><th class="n">Tickets</th><th class="n">Dont livraison</th><th class="n">Coût des produits vendus</th><th></th></tr></thead><tbody>${hist}</tbody></table></div></div>`:'<p class="help">Aucune journée pour l\'instant. Importez votre premier export ci-dessus.</p>'}</section>
+  <section><details class="panel" id="manual"${u.open?' open':''}><summary>Saisir ou corriger une journée à la main</summary>
+    ${items.length?`<div class="row"><label for="sl-date">Jour<input type="date" id="sl-date" data-ui="sale.date" value="${esc(u.date)}"></label><span class="pill info">${cur?'Journée déjà enregistrée : vous la modifiez':'Nouvelle journée'}</span></div>
+    <div class="tw"><table><thead><tr><th>Article vendu</th><th class="n">Quantité</th></tr></thead><tbody>${body}</tbody></table></div>
+    <div><button class="primary" data-act="saveSale">Enregistrer cette journée</button></div>`:'<p class="help">Aucune recette. Créez vos articles dans les réglages.</p>'}
+  </details></section>`;
+}
+
+function vMoves(){
+  const ps=prods();if(!ps.length)return head('Entrées et sorties','')+noData();
+  const m=ui.move,all=sitesSorted(),tr=m.type==='transfert';
+  const site=byId(all,m.site)||(m.type==='perte'?restos()[0]||all[0]:depots()[0]||all[0]);
+  const dest=byId(all,m.to)||restos()[0]||all.find(s=>s!==site);
+  const body=famRows(ps,tr?3:2,p=>`<tr><th><label for="mq-${esc(p.id)}" class="inl">${pname(p)}</label></th>${tr?`<td class="n muted">${site?f(stockAt(site.id,p.id)):'–'}</td>`:''}<td class="n"><input class="qty" inputmode="decimal" id="mq-${esc(p.id)}" data-mq="${esc(p.id)}" autocomplete="off"></td></tr>`);
+  const hist=S.moves.slice(0,40).map(x=>{const s=byId(S.sites,x.siteId),t=byId(S.sites,x.toSiteId);
+    const res=Object.entries(x.lines||{}).map(([pid,q])=>f(q)+' '+esc((byId(S.products,pid)||{name:'produit supprimé'}).name)).join(', ');
+    return `<tr><td>${dfr(x.date)}</td><td>${esc((TYPES[x.type]||[x.type])[0])}</td><td>${esc(s?s.name:'?')}${x.type==='transfert'?' vers '+esc(t?t.name:'?'):''}</td><td>${res}${x.note?`<br><small>${esc(x.note)}</small>`:''}</td><td class="n">${money(costOf(x.lines))}</td><td class="n"><button class="ghost" data-act="del" data-path="movements/${esc(x.id)}">Supprimer</button></td></tr>`}).join('');
+  return head('Entrées et sorties',"Tout ce qui change le stock en dehors des ventes.")+
+  `<section><div class="quick">${Object.entries(TYPES).map(([k,[l,d]])=>`<button class="choice" data-act="mvType" data-id="${k}" aria-pressed="${k===m.type}"><b>${l}</b><small>${d}</small></button>`).join('')}</div>
+  <div class="panel"><div class="row">
+    <label for="mv-date">Date<input type="date" id="mv-date" data-ui="move.date" value="${esc(m.date)}"></label>
+    <label for="mv-site">${tr?'Depuis':m.type==='perte'?'Site concerné':'Livré à'}<select id="mv-site" data-ui="move.site">${opts(all,site&&site.id)}</select></label>
+    ${tr?`<label for="mv-to">Vers<select id="mv-to" data-ui="move.to">${opts(all,dest&&dest.id)}</select></label>`:''}
+    <label for="mv-note" style="flex:1;min-width:200px">${m.type==='perte'?'Raison':'Référence (n° de bon ou de facture)'}<input id="mv-note" autocomplete="off"></label>
   </div>
-  <div class="tw"><table><thead><tr><th>Article vendu</th><th>Recette (par unité vendue)</th><th class="n">Quantité vendue</th></tr></thead><tbody>${body}</tbody></table></div>
-  <div><button class="primary" data-act="saveSale">Enregistrer les ventes</button></div></div>
-  <div class="card"><h2>Importer un export de caisse</h2><p class="muted">Choisissez l'export Excel des tickets (colonnes Ticket No., Date, Ticket name, Designations). La consommation est calculée par jour à partir des recettes, avec un sachet pour deux burgers ou stripsters sur les tickets de livraison (nom de ticket qui commence par un chiffre ou par Emp). Vous voyez le résultat avant d'enregistrer.</p>
-  <label for="sl-file">Fichier .xlsx<input type="file" id="sl-file" accept=".xlsx,.xls,.csv"></label></div>${impHtml()}
-  <div class="card"><h2>Journées saisies</h2>${hist?`<div class="tw"><table><thead><tr><th>Date</th><th>Restaurant</th><th class="n">Articles vendus</th><th class="n">Tickets livraison</th><th class="n">Boissons menu non déduites</th><th class="n">Coût matière</th><th></th></tr></thead><tbody>${hist}</tbody></table></div>`:'<p class="muted">Aucune vente saisie.</p>'}</div>`;
+  <div class="tw"><table><thead><tr><th>Produit</th>${tr?`<th class="n">En stock au départ</th>`:''}<th class="n">Quantité ${m.type==='reception'?'reçue':tr?'transférée':'perdue'}</th></tr></thead><tbody>${body}</tbody></table></div>
+  <div><button class="primary big" data-act="saveMove">Enregistrer ${m.type==='reception'?'la réception':tr?'le transfert':'la perte'}</button></div></div></section>
+  <section><h2>Derniers mouvements</h2>${hist?`<div class="panel flush"><div class="tw"><table><thead><tr><th>Date</th><th>Type</th><th>Site</th><th>Détail</th><th class="n">Valeur</th><th></th></tr></thead><tbody>${hist}</tbody></table></div></div>`:'<p class="help">Aucun mouvement enregistré.</p>'}</section>`;
 }
 
 function vCount(){
-  const ps=prods();if(!ps.length)return head('Inventaire et écarts','')+noData();
+  const ps=prods();if(!ps.length)return head('Inventaire','')+noData();
   const u=ui.count,all=sitesSorted(),site=byId(all,u.site)||all[0];
   const cur=site?byId(S.counts,u.date+'_'+site.id):null;
   const first=site&&!(CNT[site.id]||[]).some(c=>c.date<u.date);
-  const body=famRows(ps,4,p=>{const t=site?stockAt(site.id,p.id,u.date,true):0;const v=cur&&cur.counted&&cur.counted[p.id];
-    const d=v!=null?r3(v-t):null;
-    return `<tr><th><label for="cq-${esc(p.id)}" style="color:inherit;font-size:inherit">${esc(p.name)} <small>${esc(p.unit||'')}</small></label></th><td class="n muted">${first?'–':f(t)}</td><td class="n"><input class="qty" inputmode="decimal" id="cq-${esc(p.id)}" data-cq="${esc(p.id)}" data-theo="${first?'':t}" value="${v!=null?esc(v):''}" autocomplete="off"></td><td class="n" data-diff>${first||d==null?'':diffHtml(d)}</td></tr>`});
-  const list=[...S.counts];const sel=byId(list,u.sel)||list[0];let detail='<p class="muted">Aucun inventaire enregistré.</p>';
+  const body=famRows(ps,first?2:4,p=>{const t=site?stockAt(site.id,p.id,u.date,true):0;const v=cur&&cur.counted&&cur.counted[p.id];const d=v!=null?r3(v-t):null;
+    return `<tr><th><label for="cq-${esc(p.id)}" class="inl">${pname(p)}</label></th>${first?'':`<td class="n muted">${f(t)}</td>`}<td class="n"><input class="qty" inputmode="decimal" id="cq-${esc(p.id)}" data-cq="${esc(p.id)}" data-theo="${first?'':t}" value="${v!=null?esc(v):''}" autocomplete="off"></td>${first?'':`<td class="n" data-diff>${d==null?'':diffHtml(d)}</td>`}</tr>`});
+  const list=[...S.counts];const sel=byId(list,u.sel)||list[0];let detail='<p class="help">Aucun inventaire enregistré.</p>';
   if(sel){const g=gaps(sel);
-    detail=`<div class="row"><label for="ct-sel">Inventaire<select id="ct-sel" data-ui="count.sel">${list.map(c=>`<option value="${esc(c.id)}"${c===sel?' selected':''}>${dfr(c.date)} · ${esc((byId(S.sites,c.siteId)||{name:'?'}).name)}</option>`).join('')}</select></label>
+    detail=`<div class="panel"><div class="row"><label for="ct-sel">Inventaire<select id="ct-sel" data-ui="count.sel">${list.map(c=>`<option value="${esc(c.id)}"${c===sel?' selected':''}>${dfr(c.date)}, ${esc((byId(S.sites,c.siteId)||{name:'?'}).name)}</option>`).join('')}</select></label>
       <button class="ghost" data-act="del" data-path="counts/${esc(sel.id)}">Supprimer cet inventaire</button></div>`+
-    (g.initial?`<p class="muted">Premier inventaire de ce site : il sert de stock initial, il n'y a pas d'écart à calculer.</p>`:
-    `<div class="tw"><table><thead><tr><th>Produit</th><th class="n">Théorique</th><th class="n">Compté</th><th class="n">Écart</th><th class="n">Écart %</th><th class="n">Valeur</th></tr></thead><tbody>${
-      g.rows.map(r=>`<tr><th>${esc(r.p.name)} <small>${esc(r.p.unit||'')}</small></th><td class="n">${f(r.theo)}</td><td class="n">${f(r.counted)}</td><td class="n">${diffHtml(r.diff)}</td><td class="n">${r.theo>0?f(r.diff/r.theo*100,1)+' %':'–'}</td><td class="n">${r.val==null?'<span class="todo">coût à saisir</span>':r.diff?`<span class="${r.val<0?'negv':'pos'}">${money(r.val)}</span>`:'–'}</td></tr>`).join('')
-    }<tr><th>Total</th><td colspan="4"></td><td class="n b"><span class="${g.total<0?'negv':''}">${money(g.total)}</span></td></tr></tbody></table></div>
-    <p class="muted">Écart négatif : il manque du stock par rapport aux ventes déclarées (pertes non saisies, portions trop généreuses, vol, erreur de recette ou de saisie).</p>`)}
-  return head('Inventaire et écarts',"Comptez le stock réel en fin de journée. L'écart avec le stock théorique révèle les pertes. Le comptage devient ensuite le nouveau point de départ du stock.")+
-  `<div class="card"><div class="row">
+    (g.initial?`<p class="help">C'est le premier inventaire de ce site : il sert de stock de départ, il n'y a pas d'écart à calculer.</p>`:
+    `<div class="tw"><table><thead><tr><th>Produit</th><th class="n">Attendu</th><th class="n">Compté</th><th class="n">Écart</th><th class="n">En %</th><th class="n">En valeur</th></tr></thead><tbody>${
+      g.rows.map(r=>`<tr><th>${pname(r.p)}</th><td class="n">${f(r.theo)}</td><td class="n">${f(r.counted)}</td><td class="n">${diffHtml(r.diff)}</td><td class="n">${r.theo>0?f(r.diff/r.theo*100,1)+' %':'–'}</td><td class="n">${r.val==null?'<span class="todo">coût à saisir</span>':r.diff?`<span class="${r.val<0?'negv':'pos'}">${money(r.val)}</span>`:'–'}</td></tr>`).join('')
+    }<tr class="tot"><th colspan="5">Total</th><td class="n"><span class="${g.total<0?'negv':''}">${money(g.total)}</span></td></tr></tbody></table></div>
+    <p class="help">Un écart négatif veut dire qu'il manque du stock par rapport aux ventes : pertes non saisies, portions trop généreuses, vol, ou erreur de recette ou de saisie.</p>`)+'</div>'}
+  return head('Inventaire',"Comptez ce qu'il y a réellement en fin de journée. Le comptage corrige le stock et montre ce qui a disparu.")+
+  `<section><div class="panel"><div class="row">
+    <label for="ct-site">Site compté<select id="ct-site" data-ui="count.site">${opts(all,site&&site.id)}</select></label>
     <label for="ct-date">Date du comptage<input type="date" id="ct-date" data-ui="count.date" value="${esc(u.date)}"></label>
-    <label for="ct-site">Site<select id="ct-site" data-ui="count.site">${opts(all,site&&site.id)}</select></label>
-    <span class="chip">${cur?'Inventaire déjà saisi : vous le modifiez':first?'Premier inventaire : stock initial':'Nouvel inventaire'}</span>
+    <span class="pill info">${cur?'Inventaire déjà enregistré : vous le modifiez':first?'Premier inventaire : stock de départ':'Nouvel inventaire'}</span>
   </div>
-  <div class="tw"><table><thead><tr><th>Produit</th><th class="n">Théorique</th><th class="n">Compté</th><th class="n">Écart</th></tr></thead><tbody>${body}</tbody></table></div>
-  <p class="muted">Laissez vide un produit non compté : son stock théorique est conservé.</p>
-  <div><button class="primary" data-act="saveCount">Enregistrer l'inventaire</button></div></div>
-  <div class="card"><h2>Écarts par inventaire</h2>${detail}</div>`;
+  <div class="tw"><table><thead><tr><th>Produit</th>${first?'':'<th class="n">Attendu</th>'}<th class="n">Compté</th>${first?'':'<th class="n">Écart</th>'}</tr></thead><tbody>${body}</tbody></table></div>
+  <p class="help">Laissez vide un produit que vous n'avez pas compté : son stock n'est pas modifié.</p>
+  <div><button class="primary big" data-act="saveCount">Enregistrer l'inventaire</button></div></div></section>
+  <section><h2>Écarts constatés</h2>${detail}</section>`;
 }
-const diffHtml=d=>d===0?'0':`<span class="${d<0?'negv':'pos'}">${d>0?'+':''}${f(d)}</span>`;
 
 function vOrders(){
-  const ps=prods();if(!ps.length)return head('Commandes','')+noData();
+  const ps=prods();if(!ps.length)return head('À commander','')+noData();
   const {sup,tr}=needs();const hasMin=ps.some(p=>p.minD>0||p.minR>0);
-  const hint=hasMin?'':`<div class="card"><p>Aucun seuil n'est renseigné. Saisissez pour chaque produit un seuil et un niveau cible dans <a href="#reglages">Réglages</a> : les propositions de commande s'appuient dessus.</p></div>`;
+  const hint=hasMin?'':`<div class="panel"><p>Aucun seuil d'alerte n'est défini, donc rien ne peut être proposé.</p><div><a class="btn primary" href="#reglages">Définir les seuils</a></div></div>`;
   let tot=0;sup.forEach(x=>tot+=x.cost||0);
-  return head('Commandes',"Propositions calculées à partir du stock théorique : on commande quand le dépôt passe sous son seuil, pour revenir au niveau cible, arrondi au colisage.")+hint+
-  `<div class="card"><div class="split"><h2>À commander aux fournisseurs</h2>${sup.length?'<button data-act="copyOrder">Copier la commande</button>':''}</div>${sup.length?`<div class="tw"><table><thead><tr><th>Fournisseur</th><th>Produit</th><th class="n">Stock dépôt</th><th class="n">Seuil</th><th class="n">Cible</th><th class="n">À commander</th><th class="n">Coût estimé</th></tr></thead><tbody>${
-    sup.map(x=>`<tr><td>${esc(x.p.supplier||'–')}</td><th>${esc(x.p.name)} <small>${esc(x.p.unit||'')}</small></th><td class="n"><span class="q ${status(x.d,x.p,x.q)}">${f(x.q)}</span></td><td class="n">${f(x.p.minD)}</td><td class="n">${x.p.tgtD>0?f(x.p.tgtD):'–'}</td><td class="n b">${f(x.o)}</td><td class="n">${x.cost!=null?money(x.cost):'<span class="todo">coût à saisir</span>'}</td></tr>`).join('')
-    }<tr><th colspan="6">Total estimé</th><td class="n b">${money(tot)}</td></tr></tbody></table></div>`:`<p class="muted">${hasMin?'Rien à commander : le dépôt est au-dessus de ses seuils.':'Aucune proposition sans seuil.'}</p>`}</div>
-  <div class="card"><h2>À transférer vers les restaurants</h2>${tr.length?`<div class="tw"><table><thead><tr><th>Restaurant</th><th>Produit</th><th class="n">Stock</th><th class="n">Seuil</th><th class="n">À transférer</th><th class="n">Disponible au dépôt</th></tr></thead><tbody>${
-    tr.map(x=>`<tr><td>${esc(x.s.name)}</td><th>${esc(x.p.name)} <small>${esc(x.p.unit||'')}</small></th><td class="n"><span class="q ${status(x.s,x.p,x.q)}">${f(x.q)}</span></td><td class="n">${f(x.p.minR)}</td><td class="n b">${f(x.o)}</td><td class="n">${x.avail==null?'–':`<span class="q ${x.avail<x.o?'low':'ok'}">${f(x.avail)}</span>`}</td></tr>`).join('')
-    }</tbody></table></div>`:`<p class="muted">${hasMin?'Aucun restaurant sous son seuil.':'Aucune proposition sans seuil.'}</p>`}</div>`;
+  return head('À commander',"Propositions calculées quand un stock passe sous son seuil d'alerte, pour revenir au niveau souhaité.")+hint+
+  `<section><div class="split"><h2>À commander aux fournisseurs</h2>${sup.length?'<button data-act="copyOrder">Copier la commande</button>':''}</div>${sup.length?`<div class="panel flush"><div class="tw"><table><thead><tr><th>Produit</th><th>Fournisseur</th><th class="n">Stock au dépôt</th><th class="n">Seuil</th><th class="n">À commander</th><th class="n">Coût estimé</th></tr></thead><tbody>${
+    sup.map(x=>`<tr><th>${pname(x.p)}</th><td>${esc(x.p.supplier||'–')}</td><td class="n"><span class="q ${status(x.d,x.p,x.q)}">${f(x.q)}</span></td><td class="n muted">${f(x.p.minD)}</td><td class="n b">${f(x.o)}</td><td class="n">${x.cost!=null?money(x.cost):'<span class="todo">coût à saisir</span>'}</td></tr>`).join('')
+    }<tr class="tot"><th colspan="5">Total estimé</th><td class="n">${money(tot)}</td></tr></tbody></table></div></div>`:`<p class="help">${hasMin?'Rien à commander : le dépôt est au-dessus de ses seuils.':''}</p>`}</section>
+  <section><h2>À envoyer aux restaurants</h2>${tr.length?`<div class="panel flush"><div class="tw"><table><thead><tr><th>Produit</th><th>Restaurant</th><th class="n">Stock sur place</th><th class="n">Seuil</th><th class="n">À envoyer</th><th class="n">Disponible au dépôt</th></tr></thead><tbody>${
+    tr.map(x=>`<tr><th>${pname(x.p)}</th><td>${esc(x.s.name)}</td><td class="n"><span class="q ${status(x.s,x.p,x.q)}">${f(x.q)}</span></td><td class="n muted">${f(x.p.minR)}</td><td class="n b">${f(x.o)}</td><td class="n">${x.avail==null?'–':f(x.avail)+(x.avail<x.o?' <span class="pill low">Insuffisant</span>':'')}</td></tr>`).join('')
+    }</tbody></table></div></div>`:`<p class="help">${hasMin?'Aucun restaurant sous son seuil.':''}</p>`}</section>`;
 }
 
 function vSettings(){
-  const ni=(p,k,ph)=>`<td><input class="num" inputmode="decimal" aria-label="${ph}" data-f="${k}" data-num="1" data-path="products/${esc(p.id)}" value="${p[k]!=null?esc(String(p[k]).replace('.',',')):''}" autocomplete="off"></td>`;
-  const pr=prods().map(p=>`<tr>
-    <td><input class="name" aria-label="Nom" data-f="name" data-path="products/${esc(p.id)}" value="${esc(p.name)}" autocomplete="off"></td>
-    <td><input aria-label="Famille" list="fams" data-f="family" data-path="products/${esc(p.id)}" value="${esc(p.family||'')}" style="min-width:120px" autocomplete="off"></td>
-    <td><input aria-label="Unité" data-f="unit" data-path="products/${esc(p.id)}" value="${esc(p.unit||'')}" style="min-width:70px" autocomplete="off"></td>
-    ${ni(p,'cost','Coût unitaire')}${ni(p,'pack','Colisage')}
-    <td><input aria-label="Fournisseur" data-f="supplier" data-path="products/${esc(p.id)}" value="${esc(p.supplier||'')}" style="min-width:110px" autocomplete="off"></td>
-    ${ni(p,'minR','Seuil restaurant')}${ni(p,'tgtR','Cible restaurant')}${ni(p,'minD','Seuil dépôt')}${ni(p,'tgtD','Cible dépôt')}
-    <td><button class="ghost" data-act="del" data-path="products/${esc(p.id)}">Supprimer</button></td></tr>`).join('');
-  const st=sitesSorted().map(s=>`<tr><td><input class="name" aria-label="Nom du site" data-f="name" data-path="sites/${esc(s.id)}" value="${esc(s.name)}" autocomplete="off"></td>
-    <td><select aria-label="Type" data-f="type" data-path="sites/${esc(s.id)}"><option value="depot"${s.type==='depot'?' selected':''}>Dépôt central</option><option value="restaurant"${s.type!=='depot'?' selected':''}>Restaurant</option></select></td>
-    <td><button class="ghost" data-act="del" data-path="sites/${esc(s.id)}">Supprimer</button></td></tr>`).join('');
-  const po=prods();
-  const rc=[...S.menu].sort((a,b)=>String(a.name).localeCompare(b.name,'fr')).map(it=>`<div class="rc">
-    <div class="split"><input class="name" style="flex:1" aria-label="Nom de l'article" data-f="name" data-path="menu/${esc(it.id)}" value="${esc(it.name)}" autocomplete="off">${it.todo?'<span class="chip ex">À classer</span>':it.auto?'<span class="chip">Créé par l\'import</span>':''}</div>
-    ${(it.components||[]).map((c,i)=>`<div class="line"><select aria-label="Produit" data-menu="${esc(it.id)}" data-i="${i}" data-k="pid">${opts(po,c.pid)}</select><input class="num" inputmode="decimal" aria-label="Quantité" data-menu="${esc(it.id)}" data-i="${i}" data-k="qty" value="${esc(String(c.qty??'').replace('.',','))}" autocomplete="off"><button class="ghost" data-act="delComp" data-menu="${esc(it.id)}" data-i="${i}" aria-label="Retirer">✕</button></div>`).join('')||(it.skip?'':'<p class="todo">Recette vide : cet article ne déduit rien.</p>')}
-    <div class="row">${[['bag','Compte pour les sachets'],['drink','Menu avec boisson'],['skip','Hors stock']].map(([k,l])=>`<label class="ck"><input type="checkbox" data-f="${k}" data-path="menu/${esc(it.id)}"${it[k]?' checked':''}> ${l}</label>`).join('')}</div>
-    <div class="split"><button class="ghost" data-act="addComp" data-menu="${esc(it.id)}">+ Ajouter un produit</button><button class="ghost" data-act="del" data-path="menu/${esc(it.id)}">Supprimer l'article</button></div></div>`).join('');
-  return head('Réglages',"Chaque modification est enregistrée dès que vous quittez le champ.")+
-  `<datalist id="fams">${FAMILIES.map(x=>`<option value="${x}">`).join('')}</datalist>
-  <div class="card"><div class="split"><h2>Sites</h2><button data-act="addSite">+ Ajouter un site</button></div>
-    <div class="tw"><table><thead><tr><th>Nom</th><th>Type</th><th></th></tr></thead><tbody>${st}</tbody></table></div></div>
-  <div class="card"><div class="split"><h2>Produits</h2><button data-act="addProd">+ Ajouter un produit</button></div>
-    <p class="muted">Coût en DH par unité de stock. Colisage : quantité par carton ou pack, sert à arrondir les commandes. Seuil : niveau qui déclenche l'alerte. Cible : niveau à retrouver après réassort.</p>
-    <div class="tw"><table><thead><tr><th>Nom</th><th>Famille</th><th>Unité</th><th class="n">Coût (DH)</th><th class="n">Colisage</th><th>Fournisseur</th><th class="n">Seuil resto</th><th class="n">Cible resto</th><th class="n">Seuil dépôt</th><th class="n">Cible dépôt</th><th></th></tr></thead><tbody>${pr}</tbody></table></div></div>
-  <div class="card"><h2>Import de caisse</h2><p class="muted">Produits utilisés pour les articles que l'import ne connaît pas encore : un article « Menu … » consomme 1 pièce de poulet, 1 pain, 1 boîte et 1 boisson, un Stripster 1 pièce, un Menu Stripster 2 pièces et 1 boisson. Les tickets de livraison consomment des sachets.</p>
-    <div class="row">${[['chicken','Pièce de poulet'],['bun','Pain'],['box','Boîte burger'],['drink','Boisson'],['bag','Sachet de livraison']].map(([k,l])=>`<label for="cf-${k}">${l}<select id="cf-${k}" data-f="${k}" data-path="config/import"><option value="">Aucun</option>${opts(po,(S.cfg||{})[k])}</select></label>`).join('')}</div></div>
-  <div class="card"><div class="split"><h2>Recettes des articles vendus</h2><button data-act="addMenu">+ Ajouter un article</button></div>
-    <p class="muted">Pour chaque article de la carte, indiquez ce qu'une vente consomme. Les noms doivent être ceux de la caisse. Exemple : un burger retire 1 pain, 1 pièce de poulet et 1 boîte.</p>
-    <div class="recipes">${rc||'<p class="muted">Aucun article.</p>'}</div></div>`;
+  const st=ui.set,po=prods();
+  const cat=it=>it.todo?'todo':it.skip?'hors':'stock';
+  const cnt={stock:0,hors:0,todo:0};S.menu.forEach(it=>cnt[cat(it)]++);
+  const tabs=seg([['produits',`Produits (${po.length})`],['recettes',`Recettes (${S.menu.length})`],['sites',`Sites (${S.sites.length})`],['import','Règles d\'import']],st.tab,'setTab');
+  let body='';
+  if(st.tab==='produits'){
+    const fld=(p,k,l,cls)=>`<label for="p-${esc(p.id)}-${k}">${l}<input id="p-${esc(p.id)}-${k}" class="${cls||''}" ${cls?'inputmode="decimal" data-num="1"':''} data-f="${k}" data-path="products/${esc(p.id)}" value="${p[k]!=null?esc(cls?String(p[k]).replace('.',','):p[k]):''}" autocomplete="off"></label>`;
+    body=`<p class="help">Le seuil d'alerte est la quantité en dessous de laquelle le produit apparaît dans « À commander ». Le niveau souhaité est la quantité à retrouver après le réassort.</p>
+    <datalist id="fams">${FAMILIES.map(x=>`<option value="${x}">`).join('')}</datalist>
+    <div class="panel flush">${po.map(p=>`<div class="prod">
+      <fieldset><legend>Produit</legend>${fld(p,'name','Nom')}<div class="two"><label for="p-${esc(p.id)}-family">Famille<input id="p-${esc(p.id)}-family" list="fams" data-f="family" data-path="products/${esc(p.id)}" value="${esc(p.family||'')}" autocomplete="off"></label>${fld(p,'unit','Unité')}</div></fieldset>
+      <fieldset><legend>Achat</legend><div class="two">${fld(p,'cost','Coût (DH)','num')}${fld(p,'pack','Par carton','num')}</div>${fld(p,'supplier','Fournisseur')}</fieldset>
+      <fieldset><legend>En restaurant</legend><div class="two">${fld(p,'minR',"Seuil d'alerte",'num')}${fld(p,'tgtR','Niveau souhaité','num')}</div></fieldset>
+      <fieldset><legend>Au dépôt</legend><div class="two">${fld(p,'minD',"Seuil d'alerte",'num')}${fld(p,'tgtD','Niveau souhaité','num')}</div><div><button class="ghost" data-act="del" data-path="products/${esc(p.id)}">Supprimer ce produit</button></div></fieldset>
+    </div>`).join('')||'<p style="padding:14px 20px" class="help">Aucun produit.</p>'}</div>
+    <div><button class="primary" data-act="addProd">Ajouter un produit</button></div>`;
+  }else if(st.tab==='recettes'){
+    const q=norm(st.q||'');
+    const rows=S.menu.filter(it=>cat(it)===st.filter).sort((a,b)=>String(a.name).localeCompare(b.name,'fr')).map(it=>{
+      const sum=(it.components||[]).map(c=>f(c.qty,3)+' '+esc((byId(S.products,c.pid)||{name:'produit supprimé'}).name)).join(', ');
+      const open=st.edit===it.id;
+      return `<div class="rcp" data-n="${esc(norm(it.name))}"${q&&!norm(it.name).includes(q)?' hidden':''}>
+      <div class="sum"><div><b>${esc(it.name)}${it.auto?' <span class="pill info">Ajouté par un import</span>':''}</b><small>${it.skip?'Ne retire rien du stock':sum||'<span class="todo">Recette vide : ne retire rien du stock</span>'}</small></div>
+        <button class="${open?'primary':''}" data-act="editRc" data-id="${esc(it.id)}">${open?'Terminer':'Modifier'}</button></div>
+      ${open?`<div class="ed">
+        <label for="rc-name" style="max-width:420px">Nom de l'article, exactement comme dans la caisse<input id="rc-name" data-f="name" data-path="menu/${esc(it.id)}" value="${esc(it.name)}" autocomplete="off"></label>
+        <div><h3>Une vente retire du stock</h3></div>
+        ${(it.components||[]).map((c,i)=>`<div class="line"><select aria-label="Produit" data-menu="${esc(it.id)}" data-i="${i}" data-k="pid">${opts(po,c.pid)}</select><input class="num" inputmode="decimal" aria-label="Quantité" data-menu="${esc(it.id)}" data-i="${i}" data-k="qty" value="${esc(String(c.qty??'').replace('.',','))}" autocomplete="off"><button class="ghost" data-act="delComp" data-menu="${esc(it.id)}" data-i="${i}">Retirer</button></div>`).join('')}
+        <div><button data-act="addComp" data-menu="${esc(it.id)}">Ajouter un produit à la recette</button></div>
+        ${[['bag','Compte pour les sachets de livraison (burger ou stripster)'],['skip','Ne suit pas le stock (sauce, frais, ajustement…)']].map(([k,l])=>`<label class="ck"><input type="checkbox" data-f="${k}" data-path="menu/${esc(it.id)}"${it[k]?' checked':''}> ${l}</label>`).join('')}
+        <div><button class="ghost" data-act="del" data-path="menu/${esc(it.id)}">Supprimer cet article</button></div></div>`:''}</div>`}).join('');
+    body=`<p class="help">Une recette dit ce qu'une vente retire du stock. Les nouveaux articles de la caisse arrivent ici après un import.</p>
+    <div class="split">${seg([['stock',`Suivent le stock (${cnt.stock})`],['hors',`Hors stock (${cnt.hors})`],['todo',`À classer (${cnt.todo})`]],st.filter,'rcFilter')}
+      <label for="rc-q" style="flex-direction:row;align-items:center;gap:8px">Chercher<input id="rc-q" type="search" value="${esc(st.q||'')}" autocomplete="off"></label></div>
+    <div class="panel flush">${rows||`<p style="padding:14px 20px" class="help">${st.filter==='todo'?'Aucun article à classer.':'Aucun article ici.'}</p>`}</div>
+    <div><button class="primary" data-act="addMenu">Ajouter un article</button></div>`;
+  }else if(st.tab==='sites'){
+    body=`<p class="help">Le dépôt reçoit les livraisons des fournisseurs et réapprovisionne les restaurants.</p>
+    <div class="panel flush"><div class="tw"><table><thead><tr><th>Nom</th><th>Type</th><th></th></tr></thead><tbody>${sitesSorted().map(s=>`<tr><td><input aria-label="Nom du site" data-f="name" data-path="sites/${esc(s.id)}" value="${esc(s.name)}" autocomplete="off" style="width:100%;max-width:340px"></td>
+      <td><select aria-label="Type" data-f="type" data-path="sites/${esc(s.id)}"><option value="depot"${s.type==='depot'?' selected':''}>Dépôt central</option><option value="restaurant"${s.type!=='depot'?' selected':''}>Restaurant</option></select></td>
+      <td class="n"><button class="ghost" data-act="del" data-path="sites/${esc(s.id)}">Supprimer</button></td></tr>`).join('')}</tbody></table></div></div>
+    <div><button class="primary" data-act="addSite">Ajouter un restaurant</button></div>`;
+  }else{
+    body=`<div class="panel"><h2>Comment l'import lit l'export de caisse</h2><ul class="plain">
+      <li>Un article dont le nom commence par « Menu » retire 1 pièce de poulet, 1 pain, 1 boîte et 1 boisson.</li>
+      <li>Un Stripster retire 1 pièce de poulet. Un Menu Stripster en retire 2, plus 1 boisson.</li>
+      <li>Un ticket dont le nom commence par un chiffre ou par « Emp » est une livraison : 1 sachet pour 2 burgers ou stripsters, arrondi au-dessus.</li>
+      <li>Les tickets « Sp » sont sur place : aucun sachet.</li></ul>
+      <p class="help">Ces règles servent pour les articles nouveaux. Dès qu'un article a sa recette, c'est la recette qui compte.</p>
+      <h3>Produits utilisés par ces règles</h3>
+      <div class="row">${[['chicken','Pièce de poulet'],['bun','Pain'],['box','Boîte burger'],['drink','Boisson'],['bag','Sachet de livraison']].map(([k,l])=>`<label for="cf-${k}">${l}<select id="cf-${k}" data-f="${k}" data-path="config/import"><option value="">Aucun</option>${opts(po,(S.cfg||{})[k])}</select></label>`).join('')}</div></div>`;
+  }
+  return head('Réglages','Chaque modification est enregistrée dès que vous quittez le champ.')+tabs+`<section>${body}</section>`;
 }
 
 /* ---------- render + routing ---------- */
-const RENDER={stock:vStock,mouvements:vMoves,ventes:vSales,inventaire:vCount,commandes:vOrders,reglages:vSettings};
-const current=()=>{const h=location.hash.slice(1);return VIEWS.includes(h)?h:'stock'};
+const RENDER={accueil:vHome,stock:vStock,mouvements:vMoves,ventes:vSales,inventaire:vCount,commandes:vOrders,reglages:vSettings};
+const current=()=>{const h=location.hash.slice(1);return VIEWS.includes(h)?h:'accueil'};
 function render(force){
   const v=current();
   document.querySelectorAll('nav a').forEach(a=>a.dataset.v===v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
   if(!ready.sites||!ready.products)return;
   const n=needs(),nb=document.getElementById('nb'),c=n.sup.length+n.tr.length;nb.hidden=!c;nb.textContent=c;
+  const nt=document.getElementById('nt'),o=tasks().filter(x=>x.s!=='done').length;nt.hidden=!o;nt.textContent=o;
   const a=document.activeElement;
   if(!force&&a&&view.contains(a)&&a.matches('input,select,textarea'))return;
   view.innerHTML=RENDER[v]();
@@ -448,33 +566,49 @@ addEventListener('hashchange',()=>{render(true);document.querySelector('main').s
 
 /* ---------- actions ---------- */
 function collect(attr){const o={};view.querySelectorAll(`[data-${attr}]`).forEach(i=>{const x=num(i.value);if(x!=null)o[i.dataset[attr]]=x});return o}
-view.addEventListener('input',e=>{const i=e.target;if(i.dataset.cq==null)return;const cell=i.closest('tr').querySelector('[data-diff]');const x=num(i.value);
+async function importFile(file){
+  try{if(typeof XLSX==='undefined')throw new Error("Le lecteur Excel n'a pas pu se charger. Rechargez la page.");
+    const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});
+    const imp=parseExport(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:''}));
+    if(!Object.keys(imp.days).length)throw new Error('Aucun ticket lisible dans ce fichier.');ui.imp=imp}
+  catch(err){ui.imp=null;toast(err.message||'Fichier illisible.',true)}
+  render(true);
+}
+view.addEventListener('dragover',e=>{const d=e.target.closest('#drop');if(d){e.preventDefault();d.classList.add('over')}});
+view.addEventListener('dragleave',e=>{const d=e.target.closest('#drop');if(d)d.classList.remove('over')});
+view.addEventListener('drop',e=>{const d=e.target.closest('#drop');if(!d)return;e.preventDefault();const file=e.dataTransfer.files[0];if(file)importFile(file)});
+view.addEventListener('toggle',e=>{if(e.target.id==='manual')ui.sale.open=e.target.open},true);
+view.addEventListener('input',e=>{const i=e.target;
+  if(i.id==='rc-q'){ui.set.q=i.value;const q=norm(i.value);view.querySelectorAll('.rcp').forEach(r=>r.hidden=!!q&&!r.dataset.n.includes(q));return}
+  if(i.dataset.cq==null)return;const cell=i.closest('tr').querySelector('[data-diff]');if(!cell)return;const x=num(i.value);
   cell.innerHTML=(x==null||i.dataset.theo==='')?'':diffHtml(r3(x-(+i.dataset.theo)))});
 view.addEventListener('change',async e=>{const el=e.target,d=el.dataset;
+  if(el.id==='sl-file'){const file=el.files[0];if(file){el.blur();await importFile(file)}return}
+  if(el.id==='rc-q')return;
   if(d.ui){const [a,b]=d.ui.split('.');ui[a][b]=el.value;el.blur();render(true);return}
-  if(el.id==='sl-file'){const file=el.files[0];if(!file)return;
-    try{if(typeof XLSX==='undefined')throw new Error("Le lecteur Excel n'a pas pu se charger. Rechargez la page.");
-      const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});
-      const imp=parseExport(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:''}));
-      if(!Object.keys(imp.days).length)throw new Error('Aucun ticket lisible dans ce fichier.');ui.imp=imp}
-    catch(err){ui.imp=null;toast(err.message||'Fichier illisible.',true)}
-    el.blur();render(true);return}
   if(d.f){let v=el.type==='checkbox'?el.checked:el.value.trim();if(d.num){v=num(v);if(v!=null&&v<0)v=null}else if(d.f==='name'&&!v){toast('Le nom ne peut pas être vide.',true);render(true);return}
-    await w(()=>db.doc(d.path).update({[d.f]:v}));return}
+    if(await w(()=>db.doc(d.path).update(d.f==='skip'||d.f==='bag'?{[d.f]:v,todo:false}:{[d.f]:v})))toast('Enregistré.');return}
   if(d.k){const it=byId(S.menu,d.menu);if(!it)return;const comps=(it.components||[]).map(c=>({...c}));
-    comps[+d.i][d.k]=d.k==='qty'?(num(el.value)||0):el.value;await w(()=>db.doc('menu/'+it.id).update({components:comps,todo:false}))}
+    comps[+d.i][d.k]=d.k==='qty'?(num(el.value)||0):el.value;await w(()=>db.doc('menu/'+it.id).update({components:comps,todo:false}),'Enregistré.')}
 });
 view.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input')&&!e.target.closest('form'))e.target.blur()});
-view.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const act=b.dataset.act;
-  if(act==='del'){if(!b.dataset.armed){const t=b.textContent;b.dataset.armed='1';b.textContent='Confirmer ?';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent=t}},3000);return}
-    await w(()=>db.doc(b.dataset.path).delete(),'Supprimé.');render(true);return}
+view.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const act=b.dataset.act,ds=b.dataset;
+  if(act==='go'){if(ds.count)ui.count.site=ds.count;if(ds.sale)ui.sale.site=ds.sale;if(ds.type){ui.move.type=ds.type;ui.move.site=''}
+    if(location.hash==='#'+ds.to)render(true);else location.hash=ds.to;return}
+  if(act==='stockSite'){ui.stock.site=ds.id;render(true);return}
+  if(act==='mvType'){ui.move.type=ds.id;ui.move.site='';render(true);return}
+  if(act==='setTab'){ui.set.tab=ds.id;render(true);return}
+  if(act==='rcFilter'){ui.set.filter=ds.id;ui.set.edit='';render(true);return}
+  if(act==='editRc'){ui.set.edit=ui.set.edit===ds.id?'':ds.id;render(true);return}
+  if(act==='del'){if(!ds.armed){const t=b.textContent;ds.armed='1';b.textContent='Confirmer la suppression';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent=t}},3500);return}
+    await w(()=>db.doc(ds.path).delete(),'Supprimé.');render(true);return}
   if(act==='saveMove'){const m=ui.move,lines=collect('mq');const site=document.getElementById('mv-site').value,to=m.type==='transfert'?document.getElementById('mv-to').value:null;
     if(!Object.keys(lines).length){toast('Saisissez au moins une quantité.',true);return}
     if(Object.values(lines).some(q=>q<=0)){toast('Les quantités doivent être positives.',true);return}
     if(m.type==='transfert'&&site===to){toast('Choisissez deux sites différents.',true);return}
     if(!m.date){toast('Choisissez une date.',true);return}
     const note=document.getElementById('mv-note').value.trim();
-    if(await w(()=>db.collection('movements').doc(uid('m')).set({type:m.type,date:m.date,siteId:site,toSiteId:to,lines,note,ts:Date.now()}),'Mouvement enregistré.'))render(true);return}
+    if(await w(()=>db.collection('movements').doc(uid('m')).set({type:m.type,date:m.date,siteId:site,toSiteId:to,lines,note,ts:Date.now()}),'Mouvement enregistré, stock mis à jour.'))render(true);return}
   if(act==='cancelImport'){ui.imp=null;render(true);return}
   if(act==='saveImport'){const imp=ui.imp,site=document.getElementById('sl-site').value;if(!imp||!site)return;
     const days=Object.values(imp.days);b.disabled=true;
@@ -483,27 +617,27 @@ view.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');i
         await db.doc('menu/'+id).set(g?{name:x.name,components:g.components,bag:!!g.bag,drink:!!g.drink,auto:true}:{name:x.name,components:[],todo:true});ids[k]=id}
       for(const d of days){const u=dayUsage(d),items={};for(const [k,x] of Object.entries(d.names))items[ids[k]]=x.q;
         await db.doc('sales/'+d.date+'_'+site).set({date:d.date,siteId:site,items,usage:u.usage,extra:u.extra,tickets:d.tickets,deliv:d.deliv,menuDrinks:u.drinks,source:'caisse',ts:Date.now()})}
-    },'Import enregistré, stock mis à jour.');
+    },'Ventes enregistrées, stock mis à jour.');
     if(ok){ui.sale.date=days.map(d=>d.date).sort().pop();ui.imp=null}render(true);return}
   if(act==='saveSale'){const u=ui.sale,site=document.getElementById('sl-site').value,old=byId(S.sales,u.date+'_'+site),items={...((old&&old.items)||{})};
     view.querySelectorAll('[data-sq]').forEach(i=>delete items[i.dataset.sq]);Object.assign(items,collect('sq'));const extra=(old&&old.extra)||{};
-    if(!u.date||!site){toast('Choisissez une date et un restaurant.',true);return}
+    if(!u.date||!site){toast('Choisissez un jour et un restaurant.',true);return}
     for(const k in items)if(items[k]<=0)delete items[k];
     const usage={};for(const [id,q] of Object.entries(items)){const it=byId(S.menu,id);for(const c of (it&&it.components)||[])if(c.pid&&c.qty)usage[c.pid]=r3((usage[c.pid]||0)+q*c.qty)}
     for(const [pid,q] of Object.entries(extra))usage[pid]=r3((usage[pid]||0)+q);
     const ref=db?db.doc('sales/'+u.date+'_'+site):null;
-    const ok=Object.keys(items).length?await w(()=>ref.set({date:u.date,siteId:site,items,usage,extra,ts:Date.now()}),'Ventes enregistrées, stock mis à jour.'):await w(()=>ref.delete(),'Journée vidée.');
+    const ok=Object.keys(items).length?await w(()=>ref.set({...(old||{}),id:undefined,date:u.date,siteId:site,items,usage,extra,ts:Date.now()}),'Journée enregistrée, stock mis à jour.'):await w(()=>ref.delete(),'Journée vidée.');
     if(ok)render(true);return}
   if(act==='saveCount'){const u=ui.count,site=document.getElementById('ct-site').value,counted=collect('cq');
     if(!u.date||!site){toast('Choisissez une date et un site.',true);return}
     if(Object.values(counted).some(q=>q<0)){toast('Une quantité comptée ne peut pas être négative.',true);return}
     if(!Object.keys(counted).length){toast('Saisissez au moins un produit compté.',true);return}
-    if(await w(()=>db.doc('counts/'+u.date+'_'+site).set({date:u.date,siteId:site,counted,ts:Date.now()}),'Inventaire enregistré.')){ui.count.sel=u.date+'_'+site;render(true)}return}
+    if(await w(()=>db.doc('counts/'+u.date+'_'+site).set({date:u.date,siteId:site,counted,ts:Date.now()}),'Inventaire enregistré, stock corrigé.')){ui.count.sel=u.date+'_'+site;render(true)}return}
   if(act==='addSite'){await w(()=>db.doc('sites/'+uid('s')).set({name:'Nouveau restaurant',type:'restaurant'}));render(true);return}
-  if(act==='addProd'){await w(()=>db.doc('products/'+uid('p')).set({name:'Nouveau produit',family:FAMILIES[0],unit:'unité',cost:null,pack:null,supplier:'',minR:null,tgtR:null,minD:null,tgtD:null}));render(true);return}
-  if(act==='addMenu'){await w(()=>db.doc('menu/'+uid('a')).set({name:'Nouvel article',components:[]}));render(true);return}
-  if(act==='addComp'||act==='delComp'){const it=byId(S.menu,b.dataset.menu);if(!it)return;const comps=(it.components||[]).map(c=>({...c}));
-    if(act==='addComp'){const p=prods()[0];if(!p){toast("Ajoutez d'abord un produit.",true);return}comps.push({pid:p.id,qty:1})}else comps.splice(+b.dataset.i,1);
+  if(act==='addProd'){await w(()=>db.doc('products/'+uid('p')).set({name:'Nouveau produit',family:FAMILIES[0],unit:'pièce',cost:null,pack:null,supplier:'',minR:null,tgtR:null,minD:null,tgtD:null}));render(true);return}
+  if(act==='addMenu'){const id=uid('a');if(await w(()=>db.doc('menu/'+id).set({name:'Nouvel article',components:[]}))){ui.set.filter='stock';ui.set.q='';ui.set.edit=id}render(true);return}
+  if(act==='addComp'||act==='delComp'){const it=byId(S.menu,ds.menu);if(!it)return;const comps=(it.components||[]).map(c=>({...c}));
+    if(act==='addComp'){const p=prods()[0];if(!p){toast("Ajoutez d'abord un produit.",true);return}comps.push({pid:p.id,qty:1})}else comps.splice(+ds.i,1);
     await w(()=>db.doc('menu/'+it.id).update({components:comps}));render(true);return}
   if(act==='copyOrder'){const {sup}=needs();let txt='Commande du '+dfr(today())+'\n',last=null;
     for(const x of sup){const s=x.p.supplier||'Fournisseur à préciser';if(s!==last){txt+='\n'+s+'\n';last=s}txt+='- '+x.p.name+' : '+f(x.o)+' '+(x.p.unit||'')+'\n'}
@@ -515,7 +649,7 @@ const sync=document.getElementById('sync'),logoutBtn=document.getElementById('lo
 const COLS={sites:'sites',products:'products',menu:'menu',movements:'moves',sales:'sales',counts:'counts'};
 const DOCS={};let sb=null,logged=false;
 function derive(){
-  for(const [col,key] of Object.entries(COLS))S[key]=Object.entries(DOCS[col]||{}).map(([id,data])=>({id,...data}));
+  for(const [col,key] of Object.entries(COLS))S[key]=Object.entries(DOCS[col]||{}).map(([id,data])=>({...data,id}));
   for(const k of ['moves','sales','counts'])S[k].sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(b.ts||0)-(a.ts||0));
   S.cfg=(DOCS.config||{}).import||{};rebuild();
 }
@@ -527,23 +661,23 @@ async function loadAll(){
 }
 function mkdb(){
   const doc=path=>{const [col,id]=path.split('/');
-    const put=async data=>{const {error}=await sb.from('stock_docs').upsert({col,id,data});if(error)throw error;(DOCS[col]=DOCS[col]||{})[id]=data;derive();render(false)};
+    const put=async data=>{data=JSON.parse(JSON.stringify(data));delete data.id;const {error}=await sb.from('stock_docs').upsert({col,id,data});if(error)throw error;(DOCS[col]=DOCS[col]||{})[id]=data;derive();render(false)};
     return {set:put,update:d=>put({...((DOCS[col]||{})[id]||{}),...d}),
       delete:async()=>{const {error}=await sb.from('stock_docs').delete().eq('col',col).eq('id',id);if(error)throw error;if(DOCS[col])delete DOCS[col][id];derive();render(false)}}};
   return {doc,collection:col=>({doc:id=>doc(col+'/'+id)})};
 }
 function showLogin(){
   logoutBtn.hidden=true;sync.textContent='Non connecté';
-  view.innerHTML=`<header class="vh"><h1>Stock ChickNSter</h1><p>Connectez-vous avec l'adresse et le mot de passe que l'administrateur vous a donnés.</p></header>
-  <form class="card" id="login"><label for="lg-mail">Adresse e-mail<input type="email" id="lg-mail" autocomplete="username" required></label>
+  view.innerHTML=`<header class="vh"><h1>Connexion</h1><p>Utilisez l'adresse e-mail et le mot de passe que l'administrateur vous a donnés.</p></header>
+  <form class="panel" id="login"><label for="lg-mail">Adresse e-mail<input type="email" id="lg-mail" autocomplete="username" required></label>
   <label for="lg-pass">Mot de passe<input type="password" id="lg-pass" autocomplete="current-password" required></label>
-  <div><button class="primary" type="submit">Se connecter</button></div></form>`;
+  <div><button class="primary big" type="submit">Se connecter</button></div></form>`;
 }
 async function onSession(session){
   if(!session){logged=false;db=null;ready.sites=ready.products=false;showLogin();return}
   if(logged)return;logged=true;db=mkdb();sync.textContent='Chargement…';
   try{await loadAll();ready.sites=ready.products=true;sync.textContent=session.user.email||'Connecté';logoutBtn.hidden=false;render(true)}
-  catch(e){logged=false;view.innerHTML='<div class="card"><p>Les données ne se chargent pas'+(e&&e.message?' : '+esc(e.message):'')+'. Rechargez la page.</p></div>'}
+  catch(e){logged=false;view.innerHTML='<div class="panel"><p>Les données ne se chargent pas'+(e&&e.message?' : '+esc(e.message):'')+'. Rechargez la page.</p></div>'}
 }
 view.addEventListener('submit',async e=>{if(e.target.id!=='login')return;e.preventDefault();
   const {error}=await sb.auth.signInWithPassword({email:document.getElementById('lg-mail').value.trim(),password:document.getElementById('lg-pass').value});
@@ -553,7 +687,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden||!logged)re
   if(a&&view.contains(a)&&a.matches('input,select,textarea'))return;loadAll().then(()=>render(false)).catch(()=>{})});
 function start(){
   render(true);
-  if(SUPABASE_URL.startsWith('__')||typeof supabase==='undefined'){view.innerHTML='<div class="card"><p>La connexion à la base de données n\'est pas configurée.</p></div>';return}
+  if(SUPABASE_URL.startsWith('__')||typeof supabase==='undefined'){view.innerHTML='<div class="panel"><p>La connexion à la base de données n\'a pas pu démarrer. Rechargez la page.</p></div>';return}
   sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
   sb.auth.onAuthStateChange((_ev,session)=>setTimeout(()=>onSession(session),0));
 }
